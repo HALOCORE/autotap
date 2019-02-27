@@ -1,10 +1,17 @@
 version: "3"
 services:
     postgres:
-      image: "zlfben/autotap_database:icse"
+      build: 
+        context: .
+        dockerfile: docker/Dockerfile-db
+        args:
+          - dbusername=iftttuser
+          - dbpassword=password
     
     backend:
-      image: "zlfben/autotap_backend:icse"
+      build:
+        context: .
+        dockerfile: docker/Dockerfile-backend
       depends_on:
         - postgres
       volumes:
@@ -13,7 +20,9 @@ services:
         - "8000:8000"
 
     frontend:
-      image: "zlfben/autotap_frontend:icse"
+      build:
+        context: .
+        dockerfile: docker/Dockerfile-frontend
       volumes:
         - ./ifttt-frontend/rule-creation/RMI:/home/superifttt/frontend
         - /home/superifttt/frontend/node_modules
